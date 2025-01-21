@@ -1,0 +1,49 @@
+let cols = 5; // Number of columns in the cube matrix
+let rows = 5; // Number of rows in the cube matrix
+let layers = 5; // Number of layers in the cube matrix
+
+let cubeSize = 50; // Size of each cube
+let angle = 0; // For rotation animation
+
+function setup() {
+  createCanvas(600, 600, WEBGL);
+  noStroke();
+}
+
+function draw() {
+  background(0);
+  
+  // Set up dynamic rotation based on the angle
+  rotateX(angle * 0.1);
+  rotateY(angle * 0.1);
+
+  // Loop through the 3D matrix to draw each cube
+  let offset = cubeSize * 1.5;
+  for (let x = 0; x < cols; x++) {
+    for (let y = 0; y < rows; y++) {
+      for (let z = 0; z < layers; z++) {
+        // Calculate position
+        let posX = x * offset - (cols * offset) / 2;
+        let posY = y * offset - (rows * offset) / 2;
+        let posZ = z * offset - (layers * offset) / 2;
+
+        // Create a dynamic color based on position and time
+        let r = map(sin(frameCount * 0.02 + x), -1, 1, 50, 255);
+        let g = map(cos(frameCount * 0.02 + y), -1, 1, 50, 255);
+        let b = map(sin(frameCount * 0.02 + z), -1, 1, 50, 255);
+
+        // Set the fill color for each cube
+        fill(r, g, b);
+        
+        // Draw the cube at the calculated position
+        push();
+        translate(posX, posY, posZ);
+        box(cubeSize);
+        pop();
+      }
+    }
+  }
+
+  // Increment the angle to create the rotating effect
+  angle += 0.01;
+}
