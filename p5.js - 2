@@ -1,0 +1,55 @@
+let cols = 5; // Number of columns in the cube matrix
+let rows = 5; // Number of rows in the cube matrix
+let layers = 5; // Number of layers in the cube matrix
+
+let cubeSize = 50; // Base size of each cube
+let angle = 0; // For rotation animation
+let scaleFactor = 0.5; // Amount by which each cube scales up/down
+let scaleSpeed = 0.05; // Speed at which the cube scales up/down
+
+function setup() {
+  createCanvas(600, 600, WEBGL);
+  noStroke();
+}
+
+function draw() {
+  background(0);
+
+  // Set up dynamic rotation based on the angle
+  rotateX(angle * 0.1);
+  rotateY(angle * 0.1);
+
+  // Loop through the 3D matrix to draw each cube
+  let offset = cubeSize * 1.5;
+  for (let x = 0; x < cols; x++) {
+    for (let y = 0; y < rows; y++) {
+      for (let z = 0; z < layers; z++) {
+        // Calculate position
+        let posX = x * offset - (cols * offset) / 2;
+        let posY = y * offset - (rows * offset) / 2;
+        let posZ = z * offset - (layers * offset) / 2;
+
+        // Create a dynamic color based on position and time
+        let r = map(sin(frameCount * 0.02 + x), -1, 1, 50, 255);
+        let g = map(cos(frameCount * 0.02 + y), -1, 1, 50, 255);
+        let b = map(sin(frameCount * 0.02 + z), -1, 1, 50, 255);
+
+        // Set the fill color for each cube
+        fill(r, g, b);
+
+        // Calculate the scale factor for the cube
+        let scaleValue = map(sin(frameCount * scaleSpeed + (x + y + z)), -1, 1, 0.5, 1.5);
+
+        // Draw the cube at the calculated position with dynamic scaling
+        push();
+        translate(posX, posY, posZ);
+        scale(scaleValue); // Apply dynamic scaling
+        box(cubeSize);
+        pop();
+      }
+    }
+  }
+
+  // Increment the angle to create the rotating effect
+  angle += 0.01;
+}
